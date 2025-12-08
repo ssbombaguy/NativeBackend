@@ -3,8 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 
-import laptopRoutes from "./routes/laptopRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 import phoneRoutes from "./routes/phoneRoutes.js";
+import laptopRoutes from "./routes/laptopRoutes.js";
 
 dotenv.config();
 
@@ -12,11 +13,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-connectDB();
+await connectDB();
 
-app.use("/api/laptops", laptopRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/phones", phoneRoutes);
+app.use("/api/laptops", laptopRoutes);
 
-app.listen(5000, () => {
-  console.log("Server running at http://localhost:5000");
-});
+app.listen(5000, () => console.log("Server running on http://localhost:5000"));
