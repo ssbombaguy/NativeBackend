@@ -1,33 +1,25 @@
 import express from "express";
-import { ObjectId } from "mongodb";
 import { db } from "../config/db.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  try {
-    const phones = await db.collection("products")
-      .find({ type: "phone" })
-      .toArray();
+router.get("/", authMiddleware, async (req, res) => {
+  const phones = await db
+    .collection("products")
+    .find({ type: "phones" })
+    .toArray();
 
-    res.json(phones);
-  } catch (err) {
-    res.status(500).json({ message: "Error loading phones" });
-  }
+  res.json(phones);
 });
 
-router.get("/:id", async (req, res) => {
-  try {
-    const item = await db.collection("products").findOne({
-      _id: new ObjectId(req.params.id),
-    });
+router.get("/:id", authMiddleware, async (req, res) => {
+  const phones = await db
+    .collection("products")
+    .findOne({ _id: new ObjectId(req.params.id) });
 
-    if (!item) return res.status(404).json({ message: "Phone not found" });
-
-    res.json(item);
-  } catch (err) {
-    res.status(500).json({ message: "Error loading phone" });
-  }
+  res.json(phones);
 });
 
 export default router;
