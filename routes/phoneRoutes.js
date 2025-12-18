@@ -6,20 +6,27 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.get("/", authMiddleware, async (req, res) => {
-  const phones = await db
-    .collection("products")
-    .find({ type: "phones" })
-    .toArray();
-
-  res.json(phones);
+  try {
+    const phones = await db
+      .collection("phones")
+      .find({})
+      .toArray();
+    res.json(phones);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 router.get("/:id", authMiddleware, async (req, res) => {
-  const phones = await db
-    .collection("products")
-    .findOne({ _id: new ObjectId(req.params.id) });
-
-  res.json(phones);
+  try {
+    const phone = await db
+      .collection("phones")
+      .findOne({ _id: new ObjectId(req.params.id) });
+    if (!phone) return res.status(404).json({ message: "Phone not found" });
+    res.json(phone);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 export default router;

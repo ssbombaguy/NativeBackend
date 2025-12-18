@@ -19,4 +19,4 @@ app.use("/api/auth", authRoutes);
 app.use("/api/phones", phoneRoutes);
 app.use("/api/laptops", laptopRoutes);
 
-app.listen(5000, () => console.log("Server running on http://localhost:5000"));
+app.listen(5000, "192.168.100.2", () => console.log("Server running on http://192.168.100.2:5000"));
