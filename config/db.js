@@ -1,17 +1,14 @@
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const client = new MongoClient(process.env.MONGO_URI);
-export let db;
-
 export async function connectDB() {
   try {
-    await client.connect();
-    db = client.db("Native");
-    console.log("MongoDB Connected (Native Driver)");
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB connected with Mongoose");
   } catch (err) {
-    console.error("DB ERROR:", err);
+    console.error("DB connection error:", err);
+    process.exit(1);
   }
 }
