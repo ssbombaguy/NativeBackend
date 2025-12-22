@@ -1,7 +1,7 @@
 import express from "express";
 import User from "../models/User.js";
-import jwt from "jsonwebtoken";
 import { authMiddleware } from "../middleware/authMiddleware.js";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.post("/register", async (req, res) => {
   res.status(201).json({ message: "Registered" });
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login",authMiddleware, async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) return res.status(404).json({ message: "Not found" });
 
@@ -32,19 +32,5 @@ router.post("/login", async (req, res) => {
   });
 });
 
-router.get("/me", authMiddleware, async (req, res) => {
-  const user = await User.findById(req.user.userId).select("-password");
-  res.json(user);
-});
-
-router.put("/me", authMiddleware, async (req, res) => {
-  const user = await User.findByIdAndUpdate(
-    req.user.userId,
-    req.body,
-    { new: true }
-  ).select("-password");
-
-  res.json(user);
-});
 
 export default router;
